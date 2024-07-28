@@ -16,9 +16,13 @@ metadata:
   name: pyspark-test-{{ ts_nodash|lower}}-{{ task_instance.try_number }}
   namespace: processing
 spec:
+  deps:
+    jars:
+      - "https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.1/hadoop-aws-3.3.1.jar"
+      - "https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.11.901/aws-java-sdk-bundle-1.11.901.jar"
   type: Python
   pythonVersion: "3"
-  mode: cluster
+  mode: clustera
   image: "seoerick/test:0.0.2"
   imagePullPolicy: Always
   # mainApplicationFile: local:///opt/spark/examples/src/main/python/pi.py
