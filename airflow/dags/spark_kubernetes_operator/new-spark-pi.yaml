@@ -19,10 +19,10 @@ spec:
   type: Python
   pythonVersion: "3"
   mode: cluster
-  image: "spark:3.5.0"
+  image: "seoerick/test:0.0.1"
   imagePullPolicy: Always
   # mainApplicationFile: local:///opt/spark/examples/src/main/python/pi.py
-  mainApplicationFile: local:///opt/airflow/scripts/users_by_city.py
+  mainApplicationFile: local:///app/users_by_city.py
   sparkVersion: "3.5.0"
   restartPolicy:
     type: OnFailure
