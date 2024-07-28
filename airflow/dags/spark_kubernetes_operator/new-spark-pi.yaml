@@ -22,7 +22,7 @@ spec:
       - "https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.11.901/aws-java-sdk-bundle-1.11.901.jar"
   type: Python
   pythonVersion: "3"
-  mode: clustera
+  mode: cluster
   image: "seoerick/test:0.0.2"
   imagePullPolicy: Always
   # mainApplicationFile: local:///opt/spark/examples/src/main/python/pi.py
