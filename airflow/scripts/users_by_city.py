@@ -1,5 +1,6 @@
 import pyspark
 from pyspark.sql import SparkSession
+from pyspark import SparkConf
 
 conf = SparkConf()
 conf.set("spark.yarn.maxAppAttempts", "1")

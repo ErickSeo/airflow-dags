@@ -13,7 +13,7 @@
 apiVersion: "sparkoperator.k8s.io/v1beta2"
 kind: SparkApplication
 metadata:
-  name: pyspark-test-2
+  name: pyspark-test-3
   namespace: processing
 spec:
   type: Python
