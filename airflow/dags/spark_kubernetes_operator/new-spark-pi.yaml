@@ -24,7 +24,8 @@ spec:
   mode: cluster
   image: "spark:3.5.0"
   imagePullPolicy: Always
-  mainApplicationFile: local:///opt/spark/examples/src/main/python/pi.py
+  # mainApplicationFile: local:///opt/spark/examples/src/main/python/pi.py
+  mainApplicationFile: local:///opt/airflow/dags/repo/airflow/scripts/users_by_city.py
   sparkVersion: "3.5.0"
   restartPolicy:
     type: OnFailure
