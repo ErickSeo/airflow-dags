@@ -4,17 +4,17 @@ from pyspark import SparkConf
 
 conf = SparkConf()
 conf.set("spark.yarn.maxAppAttempts", "1")
-conf.set("spark.hadoop.fs.s3a.endpoint", "minio-service.minio.svc.cluster.local:9000")
-conf.set("spark.hadoop.fs.s3a.access.key", "minioadmin")
-conf.set("spark.hadoop.fs.s3a.secret.key", "minioadmin")
-conf.set("spark.hadoop.fs.s3a.connection.ssl.enabled", "false")
+conf.set("spark.hadoop.fs.s3.endpoint", "minio-service.minio.svc.cluster.local:9000")
+conf.set("spark.hadoop.fs.s3.access.key", "minioadmin")
+conf.set("spark.hadoop.fs.s3.secret.key", "minioadmin")
+conf.set("spark.hadoop.fs.s3.connection.ssl.enabled", "false")
 # "Enable S3 path style access ie disabling the default virtual hosting behaviour.
 # Useful for S3A-compliant storage providers as it removes the need to set up DNS for virtual hosting."
-conf.set("spark.hadoop.fs.s3a.path.style.access", "true")
+conf.set("spark.hadoop.fs.s3.path.style.access", "true")
 # Set Committer config compliant with MinIO
-conf.set("spark.hadoop.fs.s3a.committer.name", "directory")
-conf.set("spark.hadoop.fs.s3a.committer.staging.conflict-mode", "replace")
-conf.set("spark.hadoop.fs.s3a.committer.staging.tmp.path", "/tmp/staging")
+conf.set("spark.hadoop.fs.s3.committer.name", "directory")
+conf.set("spark.hadoop.fs.s3.committer.staging.conflict-mode", "replace")
+conf.set("spark.hadoop.fs.s3.committer.staging.tmp.path", "/tmp/staging")
 
 spark = SparkSession.builder.appName("Dockerized Minio Spark Test").config(conf=conf).getOrCreate()
 
@@ -130,4 +130,4 @@ spark.sql("""
   group by city
 """).show(truncate=False)
 
-df_users.write.mode("overwrite").parquet(f"s3a://raw/file.parquet")
+df_users.write.mode("overwrite").parquet(f"s3://raw/file.parquet")
