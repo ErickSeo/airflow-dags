@@ -13,7 +13,7 @@
 apiVersion: "sparkoperator.k8s.io/v1beta2"
 kind: SparkApplication
 metadata:
-  name: pyspark-test-{{ ts_nodash\|lower }}-{{ task_instance.try_number }}
+  name: pyspark-test-{{ ts_nodash }}-{{ task_instance.try_number }}
   namespace: processing
 spec:
   type: Python
