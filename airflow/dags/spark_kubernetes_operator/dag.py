@@ -15,7 +15,7 @@ default_args={
    'retry_delay': timedelta(minutes=5)
 }
 with DAG(
-   'my-second-dag',
+   'my-dag',
    default_args=default_args,
    description='simple dag',
    schedule_interval=timedelta(days=1),
@@ -36,4 +36,3 @@ with DAG(
        do_xcom_push=True,
        dag=dag
    )
-   
