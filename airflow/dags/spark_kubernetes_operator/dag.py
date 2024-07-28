@@ -30,7 +30,7 @@ with DAG(
        retries=3,
        application_file="new-spark-pi.yaml",
        namespace="processing",
-       kubernetes_conn_id="kubernetes_in_cluster",
+       in_cluster=True,
        api_group="sparkoperator.k8s.io",
        api_version="v1beta2",
        do_xcom_push=True,
