@@ -19,7 +19,7 @@ spec:
   type: Python
   pythonVersion: "3"
   mode: cluster
-  image: "seoerick/trip_raw:0.0.4"
+  image: "seoerick/trip_raw:0.0.1"
   imagePullPolicy: Always
   # mainApplicationFile: local:///opt/spark/examples/src/main/python/pi.py
   mainApplicationFile: local:///app/main.py
