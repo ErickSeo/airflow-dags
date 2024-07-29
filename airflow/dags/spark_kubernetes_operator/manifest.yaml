@@ -9,7 +9,7 @@ spec:
   mode: cluster
   image: "seoerick/trip_cleaned:0.0.1"
   imagePullPolicy: Always
-  mainApplicationFile: local:///app/src/main.py
+  mainApplicationFile: local:///app/main.py
   sparkVersion: "3.5.0"
   restartPolicy:
     type: OnFailure
