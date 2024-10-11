@@ -7,10 +7,7 @@ from pathlib import Path
 import dagfactory
 
 
-DEFAULT_CONFIG_ROOT_DIR = "/usr/local/airflow/dags/teste"
-CONFIG_ROOT_DIR = Path(os.getenv("CONFIG_ROOT_DIR", DEFAULT_CONFIG_ROOT_DIR))
-
-config_file = str(CONFIG_ROOT_DIR / "config.yaml")
+config_file = Path.cwd() / "dags/teste/config.yaml"
 
 example_dag_factory = dagfactory.DagFactory(config_file)
 
