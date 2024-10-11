@@ -11,10 +11,6 @@ default:
   default_view: "tree"
   orientation: "LR"
   schedule_interval: "0 1 * * *"
-  on_success_callback_name: print_hello
-  on_success_callback_file: $CONFIG_ROOT_DIR/print_hello.py
-  on_failure_callback_name: print_hello
-  on_failure_callback_file: $CONFIG_ROOT_DIR/print_hello.py
 
 example_dag:
   default_args:
@@ -30,11 +26,6 @@ example_dag:
     task_2:
       operator: airflow.operators.bash_operator.BashOperator
       bash_command: "echo 2"
-      dependencies: [task_1]
-    task_3:
-      operator: airflow.operators.python_operator.PythonOperator
-      python_callable_name: print_hello
-      python_callable_file: $CONFIG_ROOT_DIR/print_hello.py
       dependencies: [task_1]
 
 example_dag2:
@@ -81,12 +72,6 @@ example_dag4:
       operator: airflow.operators.bash_operator.BashOperator
       bash_command: "echo 2"
       task_group_name: task_group_1
-    task_3:
-      operator: airflow.operators.python_operator.PythonOperator
-      python_callable_name: print_hello
-      python_callable_file: $CONFIG_ROOT_DIR/print_hello.py
-      task_group_name: task_group_1
-      dependencies: [task_2]
     task_4:
       operator: airflow.operators.bash_operator.BashOperator
       bash_command: "echo 1"
