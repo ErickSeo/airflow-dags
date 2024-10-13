@@ -1,3 +1,4 @@
+#colocar hash do commit aqui para forçar
 import os
 from pathlib import Path
 
