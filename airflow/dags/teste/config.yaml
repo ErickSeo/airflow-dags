@@ -13,9 +13,9 @@ default:
 
 example_dag:
   default_args:
+    dag_id: "12345"
     owner: "custom_owner"
     start_date: 2 days
-  dag_id: "12345"
   default_view: "graph"
   description: "this is an example dag"
   schedule_interval: "0 3 * * *"
