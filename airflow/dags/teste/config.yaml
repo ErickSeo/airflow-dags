@@ -28,7 +28,7 @@ example_dag:
     task_2:
       operator: airflow.operators.bash_operator.BashOperator
       bash_command: "echo 2"
-      dependencies: ["aaaaaa"]
+      dependencies: [vvvvv]
 
 example_dag2:
   default_args:
