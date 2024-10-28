@@ -22,16 +22,14 @@ example_dag:
   render_template_as_native_obj: True
   tasks:
     aaaa:
-      task_id: "vvvvv"
-      label: "aaaa"
-      operator: airflow.operators.bash_operator.BashOperator
-      bash_command: "echo 1"
+      operator: airflow.operators.dummy.DummyOperator
+      task_id: "meu_task_dummy"
+      label: "Executa Script Bash"
+
     task_2:
-      operator: airflow.operators.bash_operator.BashOperator
+      operator: airflow.operators.dummy.DummyOperator
       task_id: "vvvvv2"
-      label: "aaaa"
-      bash_command: "echo 2"
-      dependencies: [vvvvv]
+      dependencies: [meu_task_dummy]
 
 example_dag2:
   default_args:
