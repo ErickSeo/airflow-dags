@@ -25,8 +25,7 @@ example_dag:
       task_id: "aaaaaa"
       operator: airflow.operators.bash_operator.BashOperator
       bash_command: "echo 1"
-    vvvvv:
-      task_id: "aaaaaa2"
+    task_2:
       operator: airflow.operators.bash_operator.BashOperator
       bash_command: "echo 2"
       dependencies: [vvvvv]
