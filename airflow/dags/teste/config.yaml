@@ -22,6 +22,7 @@ example_dag:
   render_template_as_native_obj: True
   tasks:
     task_1:
+      task_id: "aaaaaa"
       operator: airflow.operators.bash_operator.BashOperator
       bash_command: "echo 1"
     task_2:
