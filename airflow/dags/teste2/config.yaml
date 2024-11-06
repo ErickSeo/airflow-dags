@@ -1,7 +1,7 @@
 default:
   default_args:
     owner: "default_owner"
-    start_date: 2018-03-01
+    start_date: 2024-11-06
     retries: 1
     retry_delay_sec: 300
   concurrency: 1
@@ -21,10 +21,71 @@ teste:
         start_dag_render:
           operator: airflow.operators.dummy.DummyOperator 
           task_id: start_dag_render 
+
         upload_notebook_tabela_1:
           task_id: tabela_1_notebook
           task_group_name: tabela_1
-          operator: utils.operators.upload_notebook.UploadDatabricksNotebook
+          operator: utils.operators.databricks.upload_notebook.UploadDatabricksNotebook
           local_file_path: dags/repo/airflow/services/resources/dag_id/tabela_1.py
           remote_file_path: /test/resources/dag_id/tabela_1.py
           dependencies: [start_dag_render] 
+
+        create_job_cluster_tabela_1:
+          task_id: "create_job_cluster_tabela_1"
+          task_group_name: tabela_1
+          operator: utils.operators.databricks.create_job_cluster.DatabricksCreateJobCluster
+          dependencies: [upload_notebook_tabela_1]
+          notebook_task:
+            notebook_path: /test/resources/dag_id/tabela_1.py
+          new_cluster:
+            node_type_id: "n2-standard-4"
+            driver_node_type_id: "n2-standard-4"
+            spark_version: "14.3.x-scala2.12"
+            timeout_seconds: "36000"
+            autotermination_minutes: 0
+            auto_scale:
+              min_workers: 1
+              max_workers: 3
+            enable_elastic_disk: False
+            spark_conf:
+              "spark.app.name":  "{{ dag.dag_id }}"
+              "spark.metrics.executorMetricsSource.enabled": "false"
+              "spark.databricks.delta.formatCheck.enabled": "false"
+              "spark.databricks.conda.condaMagic.enabled": "true"
+              "spark.metrics.appStatusSource.enabled": "true"
+            custom_tags:
+              "tg_name_cluster": "dev_eng_shared_cluster"
+              TaskName: "{{ task.task_id }}"
+              DagName: "{{ dag.dag_id }}"
+            gcp_attributes": 
+              "use_preemptible_executors": True
+              "google_service_account": "sa-allos-dbx-cluster-nonprd@allos-eng-dados-nonprd.iam.gserviceaccount.com"
+              "availability": "PREEMPTIBLE_WITH_FALLBACK_GCP"
+              "zone_id": "HA"
+              "local_ssd_count": 0
+            cluster_log_conf: {}
+            spark_env_vars: 
+              DAG_NAME: "{{ dag.dag_id }}"
+              TASK_NAME: "{{ task.task_id }}"
+              CRON_DATE: "{{ dag.schedule_interval }}"
+              JOB_DATE: "{{ ds }}"
+              JOB_DATETIME: "{{ execution_date }}"
+              REFERENCE_DATE: "{{ next_ds }}"
+              REFERENCE_DATETIME: "{{ next_execution_date }}"
+              TABLE_NAME: "tabela_1"
+              LAYER: "teste"
+              ENVIRONMENT: "DEV"
+          libraries: []
+          access_control_list: []
+          retries: 4
+          retry_delay: 300
+        
+        wait_tabela_1_job_cluster:
+          task_id: "wait_tabela_1_job_cluster"
+          task_group_name: tabela_1
+          dependencies: [create_job_cluster_tabela_1]
+          operator: utils.sensors.databricks.job_sensor.DatabricksJobSensor
+          run_id: "{{{{ task_instance.xcom_pull('{create_job_cluster_tabela_1}', key='run_id') }}}}"
+          run_page_url: "{{{{ task_instance.xcom_pull('{create_job_cluster_tabela_1}', key='run_page_url') }}}}"
+          retries: 3
+          retry_delay: 300
