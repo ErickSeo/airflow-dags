@@ -26,5 +26,5 @@ teste:
           task_group_name: tabela_1
           operator: utils.operators.upload_notebook.UploadDatabricksNotebook
           local_file_path: dags/repo/airflow/services/resources/dag_id/tabela_1.py
-          remote_file_path: test/resources/dag_id/tabela_1.py
+          remote_file_path: /test/resources/dag_id/tabela_1.py
           dependencies: [start_dag_render] 
