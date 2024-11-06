@@ -38,32 +38,21 @@ teste:
           notebook_task:
             notebook_path: /test/resources/dag_id/tabela_1.py
           new_cluster:
-            node_type_id: "n2-standard-4"
-            driver_node_type_id: "n2-standard-4"
             spark_version: "14.3.x-scala2.12"
             timeout_seconds: "36000"
-            autotermination_minutes: 0
+            gcp_attributes: 
+              use_preemptible_executors: True
+              google_service_account: "sa-allos-dbx-cluster-nonprd@allos-eng-dados-nonprd.iam.gserviceaccount.com"
+              availability: "PREEMPTIBLE_WITH_FALLBACK_GCP"
+              zone_id: "HA"
+              local_ssd_count: 0
+            node_type_id: "n2-standard-4"
+            driver_node_type_id: "n2-standard-4"
+            enable_elastic_disk: False
             auto_scale:
               min_workers: 1
               max_workers: 3
-            enable_elastic_disk: False
-            spark_conf:
-              "spark.app.name":  "{{ dag.dag_id }}"
-              "spark.metrics.executorMetricsSource.enabled": "false"
-              "spark.databricks.delta.formatCheck.enabled": "false"
-              "spark.databricks.conda.condaMagic.enabled": "true"
-              "spark.metrics.appStatusSource.enabled": "true"
-            custom_tags:
-              "tg_name_cluster": "dev_eng_shared_cluster"
-              TaskName: "{{ task.task_id }}"
-              DagName: "{{ dag.dag_id }}"
-            gcp_attributes": 
-              "use_preemptible_executors": True
-              "google_service_account": "sa-allos-dbx-cluster-nonprd@allos-eng-dados-nonprd.iam.gserviceaccount.com"
-              "availability": "PREEMPTIBLE_WITH_FALLBACK_GCP"
-              "zone_id": "HA"
-              "local_ssd_count": 0
-            cluster_log_conf: {}
+            init_scripts: []
             spark_env_vars: 
               DAG_NAME: "{{ dag.dag_id }}"
               TASK_NAME: "{{ task.task_id }}"
@@ -75,6 +64,18 @@ teste:
               TABLE_NAME: "tabela_1"
               LAYER: "teste"
               ENVIRONMENT: "DEV"
+            custom_tags:
+              "tg_name_cluster": "dev_eng_shared_cluster"
+              TaskName: "{{ task.task_id }}"
+              DagName: "{{ dag.dag_id }}"
+            spark_conf:
+              "spark.app.name":  "{{ dag.dag_id }}"
+              "spark.metrics.executorMetricsSource.enabled": "false"
+              "spark.databricks.delta.formatCheck.enabled": "false"
+              "spark.databricks.conda.condaMagic.enabled": "true"
+              "spark.metrics.appStatusSource.enabled": "true"
+            autotermination_minutes: 0
+            cluster_log_conf: {}
           libraries: []
           access_control_list: []
           retries: 4
