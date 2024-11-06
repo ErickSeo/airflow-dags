@@ -1,0 +1,30 @@
+default:
+  default_args:
+    owner: "default_owner"
+    start_date: 2018-03-01
+    retries: 1
+    retry_delay_sec: 300
+  concurrency: 1
+  max_active_runs: 1
+  dagrun_timeout_sec: 600
+  default_view: "graph"
+  orientation: "LR"
+  schedule_interval: "0 1 * * *"
+
+teste:
+    description: teste
+    task_groups:
+        tabela_1:
+            tooltip: "teste"
+    
+    tasks:
+        start_dag_render:
+          operator: airflow.operators.dummy.DummyOperator 
+          task_id: start_dag_render 
+        upload_notebook_tabela_1:
+          task_id: tabela_1_notebook
+          task_group_name: tabela_1
+          operator: utils.operators.upload_notebook.UploadDatabricksNotebook
+          local_file_path: dags/repo/airflow/services/resources/dag_id/tabela_1.py
+          remote_file_path: test
+          dependencies: [start_dag_render] 

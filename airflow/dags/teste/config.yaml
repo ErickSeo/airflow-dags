@@ -11,71 +11,63 @@ default:
   orientation: "LR"
   schedule_interval: "0 1 * * *"
 
-example_dag:
-  default_args:
-    dag_id: "12345"
-    owner: "custom_owner"
-    start_date: 2 days
-  default_view: "graph"
-  description: "this is an example dag"
-  schedule_interval: "0 3 * * *"
-  render_template_as_native_obj: True
-  tasks:
-    aaaa:
-      operator: airflow.operators.dummy.DummyOperator
-      task_id: "meu_task_dummy"
-      label: "Executa Script Bash"
-
-    task_2:
-      operator: airflow.operators.dummy.DummyOperator
-      task_id: "vvvvv2"
-      dependencies: [meu_task_dummy]
-
-example_dag2:
-  default_args:
-    timezone: Europe/Amsterdam
-  tasks:
-    task_1:
-      operator: airflow.operators.bash_operator.BashOperator
-      bash_command: "echo 1"
-    task_2:
-      operator: airflow.operators.bash_operator.BashOperator
-      bash_command: "echo 2"
-      dependencies: [task_1]
-    task_3:
-      operator: airflow.operators.bash_operator.BashOperator
-      bash_command: "echo 3"
-      dependencies: [task_1]
-
-example_dag3:
-  tasks:
-    task_1:
-      operator: airflow.operators.bash_operator.BashOperator
-      bash_command: "echo 1"
-    task_2:
-      operator: airflow.operators.bash_operator.BashOperator
-      bash_command: "echo 2"
-      dependencies: [task_1]
-    task_3:
-      operator: airflow.operators.bash_operator.BashOperator
-      bash_command: "echo 3"
-      dependencies: [task_1]
-
 example_dag_teste:
-  description: "this dag uses task groups"
+  description: "teste"
   task_groups:
-    task_group_1:
+    tabela_1:
       tooltip: "this is a task group"
-      dependencies: [task_1]
   tasks:
-    task_4:
-      operator: airflow.operators.bash_operator.BashOperator
-      bash_command: "echo 1"
-      dependencies: [task_group_1]
-    task_1:
-      operator: airflow.operators.bash_operator.BashOperator
-      bash_command: "echo 1"
-    task_2:
-      operator: airflow.operators.bash_operator.BashOperator
-      bash_command: "echo 2"
-      task_group_name: task_group_1
+    start:
+      operator: airflow.operators.dummy.DummyOperator
+      task_id: "start_dag"
+
+    upload_notebook_tabela_1:
+      task_id: "upload_notebook_tabela_1"
+      task_group_name: tabela_1
+      operator: utils.operator.UploadDatabricksNotebook
+      local_file_path: ""
+      remote_file_path: ""
+      
+    create_job_cluster_tabela_1:
+      task_id: "create_job_cluster_tabela_1"
+      task_group_name: tabela_1
+      operator: utils.operator.DatabricksCreateJobCluster
+      notebook_task:
+        notebook_path: "remote_file_path"
+        new_cluster:
+          node_type_id: "r5.4xlarge"
+          driver_node_type_id: "r5.4xlarge"
+          spark_version: "9.1.x-cpu-ml-scala2.12"
+          custom_tags:
+            BU: "tech_cross"
+            data_domain: "xpto"
+            TaskName: "{{ task.task_id }}"
+            DagName: "{{ dag.dag_id }}"
+          spark_conf:
+            "spark.app.name":  "{{ dag.dag_id }}"
+            "spark.metrics.conf.*.sink.prometheus.labels": "dag={{ dag.dag_id }},task={{ task.task_id }}, environment=DEV"
+          cluster_log_conf: {}
+          spark_env_vars: 
+            DAG_NAME: "{{ dag.dag_id }}"
+            TASK_NAME: "{{ task.task_id }}"
+            CRON_DATE: "{{ dag.schedule_interval }}"
+            JOB_DATE: "{{ ds }}"
+            JOB_DATETIME: "{{ execution_date }}"
+            REFERENCE_DATE: "{{ next_ds }}"
+            REFERENCE_DATETIME: "{{ next_execution_date }}"
+            TABLE_NAME: "teste"
+            LAYER: "teste"
+            ENVIRONMENT: "DEV"
+    
+      wait_task_job_cluster_tabela_1:
+        task_id: "wait_task_job_cluster_tabela_1"
+        task_group_name: tabela_1
+        operator: utils.sensor.DatabricksCreateJobCluster
+        run_id: "{{{{ task_instance.xcom_pull('create_job_cluster_tabela_1', key='run_id') }}}}"
+        run_page_url: "{{{{ task_instance.xcom_pull('create_job_cluster_tabela_1', key='run_page_url') }}}}"
+        retries: 3
+        retry_delay: 60.0
+        
+    end:
+      operator: airflow.operators.dummy.DummyOperator
+      task_id: "end_dag"

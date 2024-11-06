@@ -8,7 +8,7 @@ from pathlib import Path
 import dagfactory
 
 
-config_file = Path.cwd() / "dags/repo/airflow/dags/teste/config.yaml"
+config_file = Path.cwd() / "dags/repo/airflow/dags/teste2/config.yaml"
 
 example_dag_factory = dagfactory.DagFactory(config_file)
 
