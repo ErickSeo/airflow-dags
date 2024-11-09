@@ -41,14 +41,14 @@ teste:
             spark_version: "14.3.x-scala2.12"
             timeout_seconds: "36000"
             gcp_attributes: 
-              use_preemptible_executors: True
+              use_preemptible_executors: true
               google_service_account: "sa-allos-dbx-cluster-nonprd@allos-eng-dados-nonprd.iam.gserviceaccount.com"
               availability: "PREEMPTIBLE_WITH_FALLBACK_GCP"
               zone_id: "HA"
               local_ssd_count: 0
             node_type_id: "n2-standard-4"
             driver_node_type_id: "n2-standard-4"
-            enable_elastic_disk: False
+            enable_elastic_disk: false
             auto_scale:
               min_workers: 1
               max_workers: 3
