@@ -136,8 +136,8 @@ class DatabricksCreateJobCluster(BaseOperator):
                             self.run_page_url
                         )
                     )
-                    logger.info("Sleeping for 10 seconds.")
-                    time.sleep(10)
+                    logger.info("Sleeping for 30 seconds.")
+                    time.sleep(30)
             except AirflowException as e:
                 raise AirflowException(e)
             except Exception as e:
