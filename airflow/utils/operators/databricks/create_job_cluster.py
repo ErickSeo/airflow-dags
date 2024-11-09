@@ -100,8 +100,6 @@ class DatabricksCreateJobCluster(BaseOperator):
 
     def _wait_for_cluster_initialization(self):
         api_retry_counter = 0
-        # us-east-1e is not available to launch cluster
-        available_az_list = ["-1a", "-1b", "-1c", "-1d", "-1f"]
         while True:
             try:
                 run_state = self._hook.get_run_state(self.run_id)

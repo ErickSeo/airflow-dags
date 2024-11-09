@@ -41,15 +41,15 @@ teste:
             spark_version: "14.3.x-scala2.12"
             timeout_seconds: "36000"
             gcp_attributes: 
-              use_preemptible_executors: true
+              use_preemptible_executors: True
               google_service_account: "sa-allos-dbx-cluster-nonprd@allos-eng-dados-nonprd.iam.gserviceaccount.com"
               availability: "PREEMPTIBLE_WITH_FALLBACK_GCP"
               zone_id: "HA"
               local_ssd_count: 0
             node_type_id: "n2-standard-4"
             driver_node_type_id: "n2-standard-4"
-            enable_elastic_disk: false
-            auto_scale:
+            enable_elastic_disk: False
+            autoscale:
               min_workers: 1
               max_workers: 3
             init_scripts: []
@@ -70,11 +70,11 @@ teste:
               DagName: "{{ dag.dag_id }}"
             spark_conf:
               "spark.app.name":  "{{ dag.dag_id }}"
-              "spark.metrics.executorMetricsSource.enabled": "false"
-              "spark.databricks.delta.formatCheck.enabled": "false"
-              "spark.databricks.conda.condaMagic.enabled": "true"
-              "spark.metrics.appStatusSource.enabled": "true"
-            autotermination_minutes: 0
+              "spark.metrics.executorMetricsSource.enabled": False
+              "spark.databricks.delta.formatCheck.enabled": False
+              "spark.databricks.conda.condaMagic.enabled": True
+              "spark.metrics.appStatusSource.enabled": True
+            autotermination_minutes: 5
             cluster_log_conf: {}
           libraries: []
           access_control_list: []
