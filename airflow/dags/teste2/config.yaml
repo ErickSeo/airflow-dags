@@ -39,7 +39,7 @@ teste:
             notebook_path: /test/resources/dag_id/tabela_1.py
           new_cluster:
             spark_version: "14.3.x-scala2.12"
-            timeout_seconds: "36000"
+            timeout_seconds: 36000
             gcp_attributes: 
               use_preemptible_executors: True
               google_service_account: "sa-allos-dbx-cluster-nonprd@allos-eng-dados-nonprd.iam.gserviceaccount.com"
@@ -74,7 +74,6 @@ teste:
               "spark.databricks.delta.formatCheck.enabled": False
               "spark.databricks.conda.condaMagic.enabled": True
               "spark.metrics.appStatusSource.enabled": True
-            autotermination_minutes: 5
             cluster_log_conf: {}
           libraries: []
           access_control_list: []
