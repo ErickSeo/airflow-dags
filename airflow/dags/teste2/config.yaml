@@ -74,7 +74,9 @@ teste:
               "spark.databricks.delta.formatCheck.enabled": False
               "spark.databricks.conda.condaMagic.enabled": True
               "spark.metrics.appStatusSource.enabled": True
-            cluster_log_conf: {}
+            cluster_log_conf: 
+              dbfs: 
+                destination: "dbfs:/test/logs/"
           libraries: []
           access_control_list: []
           retries: 4
