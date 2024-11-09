@@ -1,7 +1,6 @@
-import random
-import re
 import six
 import time
+import logging
 
 from airflow.exceptions import AirflowException
 from airflow.providers.databricks.hooks.databricks import DatabricksHook
@@ -11,6 +10,7 @@ from airflow.utils.decorators import apply_defaults
 
 XCOM_RUN_ID_KEY = "run_id"
 XCOM_RUN_PAGE_URL_KEY = "run_page_url"
+logger = logging.getLogger(__name__)
 
 
 class DatabricksCreateJobCluster(BaseOperator):
@@ -62,8 +62,7 @@ class DatabricksCreateJobCluster(BaseOperator):
         if self.access_control_list is not None:
             json_to_submit["access_control_list"] = self.access_control_list
         json_to_submit = self._deep_string_coerce(json_to_submit)
-
-        self.log.info(json_to_submit)
+        logger.info(json_to_submit)
         self.run_id = self._hook.submit_run(json_to_submit)
         self._handle_databricks_operator_execution(context)
 
@@ -91,29 +90,32 @@ class DatabricksCreateJobCluster(BaseOperator):
             raise AirflowException(msg)
 
     def _handle_databricks_operator_execution(self, context):
-        self.log.info("Run submitted with run_id: {}".format(self.run_id))
+        logger.info("Run submitted with run_id: {}".format(self.run_id))
         self.run_page_url = self._hook.get_run_page_url(self.run_id)
         self._wait_for_cluster_initialization()
-        self.log.info("Pushing run_id and run_page_url...")
+        # push xcom variables
+        logger.info("Pushing run_id and run_page_url...")
         context["ti"].xcom_push(key=XCOM_RUN_ID_KEY, value=self.run_id)
         context["ti"].xcom_push(key=XCOM_RUN_PAGE_URL_KEY, value=self.run_page_url)
 
     def _wait_for_cluster_initialization(self):
         api_retry_counter = 0
+        # us-east-1e is not available to launch cluster
+        available_az_list = ["-1a", "-1b", "-1c", "-1d", "-1f"]
         while True:
             try:
                 run_state = self._hook.get_run_state(self.run_id)
                 if run_state.is_terminal:
                     if run_state.is_successful:
-                        self.log.info("{} completed successfully.".format(self.task_id))
-                        self.log.info(
+                        logger.info("{} completed successfully.".format(self.task_id))
+                        logger.info(
                             "View run status, Spark UI, and logs at {}".format(
                                 self.run_page_url
                             )
                         )
                         break
                     else:
-                        self.log.info(
+                        logger.info(
                             "View run status, Spark UI, and logs at {}".format(
                                 self.run_page_url
                             )
@@ -124,23 +126,25 @@ class DatabricksCreateJobCluster(BaseOperator):
                         raise AirflowException(error_message)
                 else:
                     if run_state.life_cycle_state != "PENDING":
-                        self.log.info("Cluster is now running.")
+                        logger.info("Cluster is now running.")
                         break
-                    self.log.info(
+                    logger.info(
                         "{t} is in PENDING state: {s}".format(
                             t=self.task_id, s=run_state
                         )
                     )
-                    self.log.info(
+                    logger.info(
                         "View run status, Spark UI, and logs at {}".format(
                             self.run_page_url
                         )
                     )
-                    self.log.info("Sleeping for 10 seconds.")
+                    logger.info("Sleeping for 10 seconds.")
                     time.sleep(10)
+            except AirflowException as e:
+                raise AirflowException(e)
             except Exception as e:
                 # API request error etc
-                self.log.info(e)
+                logger.info(e)
                 if api_retry_counter == 5:
                     raise Exception(e)
                 else:
