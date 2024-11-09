@@ -148,4 +148,4 @@ class DatabricksCreateJobCluster(BaseOperator):
                 else:
                     api_retry_counter = api_retry_counter + 1
                 # 2 seconds above requests peak
-                time.sleep(12)
+                time.sleep(32)

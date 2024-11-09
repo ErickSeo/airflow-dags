@@ -87,7 +87,7 @@ teste:
           task_group_name: tabela_1
           dependencies: [create_job_cluster_tabela_1]
           operator: utils.sensors.databricks.job_sensor.DatabricksJobSensor
-          run_id: "{{{{ task_instance.xcom_pull('{create_job_cluster_tabela_1}', key='run_id') }}}}"
-          run_page_url: "{{{{ task_instance.xcom_pull('{create_job_cluster_tabela_1}', key='run_page_url') }}}}"
+          run_id: "{{{{ task_instance.xcom_pull('create_job_cluster_tabela_1', key='run_id') }}}}"
+          run_page_url: "{{{{ task_instance.xcom_pull('create_job_cluster_tabela_1', key='run_page_url') }}}}"
           retries: 3
           retry_delay: 300
