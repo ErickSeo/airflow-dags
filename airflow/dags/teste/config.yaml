@@ -9,7 +9,7 @@ default:
   dagrun_timeout_sec: 600
   default_view: "graph"
   orientation: "LR"
-  schedule_interval: "0 1 * * *"
+  schedule: "0 1 * * *"
 
 example_dag_teste:
   description: "teste"
@@ -18,56 +18,9 @@ example_dag_teste:
       tooltip: "this is a task group"
   tasks:
     start:
-      operator: airflow.operators.dummy.DummyOperator
-      task_id: "start_dag"
-
-    upload_notebook_tabela_1:
-      task_id: "upload_notebook_tabela_1"
-      task_group_name: tabela_1
-      operator: utils.operator.UploadDatabricksNotebook
-      local_file_path: ""
-      remote_file_path: ""
-      
-    create_job_cluster_tabela_1:
-      task_id: "create_job_cluster_tabela_1"
-      task_group_name: tabela_1
-      operator: utils.operator.DatabricksCreateJobCluster
-      notebook_task:
-        notebook_path: "remote_file_path"
-        new_cluster:
-          node_type_id: "r5.4xlarge"
-          driver_node_type_id: "r5.4xlarge"
-          spark_version: "9.1.x-cpu-ml-scala2.12"
-          custom_tags:
-            BU: "tech_cross"
-            data_domain: "xpto"
-            TaskName: "{{ task.task_id }}"
-            DagName: "{{ dag.dag_id }}"
-          spark_conf:
-            "spark.app.name":  "{{ dag.dag_id }}"
-            "spark.metrics.conf.*.sink.prometheus.labels": "dag={{ dag.dag_id }},task={{ task.task_id }}, environment=DEV"
-          cluster_log_conf: {}
-          spark_env_vars: 
-            DAG_NAME: "{{ dag.dag_id }}"
-            TASK_NAME: "{{ task.task_id }}"
-            CRON_DATE: "{{ dag.schedule_interval }}"
-            JOB_DATE: "{{ ds }}"
-            JOB_DATETIME: "{{ execution_date }}"
-            REFERENCE_DATE: "{{ next_ds }}"
-            REFERENCE_DATETIME: "{{ next_execution_date }}"
-            TABLE_NAME: "teste"
-            LAYER: "teste"
-            ENVIRONMENT: "DEV"
-    
-      wait_task_job_cluster_tabela_1:
-        task_id: "wait_task_job_cluster_tabela_1"
-        task_group_name: tabela_1
-        operator: utils.sensor.DatabricksCreateJobCluster
-        run_id: "{{{{ task_instance.xcom_pull('create_job_cluster_tabela_1', key='run_id') }}}}"
-        run_page_url: "{{{{ task_instance.xcom_pull('create_job_cluster_tabela_1', key='run_page_url') }}}}"
-        retries: 3
-        retry_delay: 60.0
-        
+      operator: airflow.operators.empty.EmptyOperator
+      task_id: "start_dag"        
     end:
-      operator: airflow.operators.dummy.DummyOperator
+      operator: airflow.operators.empty.EmptyOperator
       task_id: "end_dag"
+      dependencies: [start] 
