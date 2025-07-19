@@ -9,7 +9,7 @@ default:
   dagrun_timeout_sec: 600
   default_view: "graph"
   orientation: "LR"
-  schedule_interval: "0 1 * * *"
+  schedule: "0 1 * * *"
 
 teste:
     description: teste
@@ -56,7 +56,7 @@ teste:
             spark_env_vars: 
               DAG_NAME: "{{ dag.dag_id }}"
               TASK_NAME: "{{ task.task_id }}"
-              CRON_DATE: "{{ dag.schedule_interval }}"
+              CRON_DATE: "{{ dag.schedule }}"
               JOB_DATE: "{{ ds }}"
               JOB_DATETIME: "{{ execution_date }}"
               REFERENCE_DATE: "{{ next_ds }}"
