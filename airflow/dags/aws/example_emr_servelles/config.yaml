@@ -37,7 +37,7 @@ example_emr_serverless:
           entryPointArguments:
             - "--default_input"
             - "2023-10-27"
-          sparkSubmitParameters: |
+          sparkSubmitParameters: >
             --conf spark.jars=/usr/share/aws/iceberg/lib/iceberg-spark3-runtime.jar
             --conf spark.driver.cores=8
             --conf spark.driver.memory=16g
