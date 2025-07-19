@@ -49,10 +49,6 @@ example_emr_serverless:
             --conf spark.sql.parquet.fs.optimized.committer.name=directory
       aws_conn_id: "aws_default"
       wait_for_completion: true
-      configuration_overrides:
-        monitoringConfiguration:
-          s3MonitoringConfiguration:
-            logUri: "s3://builderbinder-datalake-artifacts/logs/emr-serverless/"
     end:
       operator: airflow.operators.empty.EmptyOperator
       task_id: "end_dag"
