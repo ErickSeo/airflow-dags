@@ -10,8 +10,11 @@ default:
   default_view: "graph"
   orientation: "LR"
   schedule: "0 1 * * *"
+  tags:
+    - "aws"
+    - "emr_serverless"
 
-example_emr_serveless:
+example_emr_serverless:
   description: "teste"
   task_groups:
     tabela_1:
