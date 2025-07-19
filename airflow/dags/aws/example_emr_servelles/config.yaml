@@ -1,7 +1,7 @@
 default:
   default_args:
     owner: "default_owner"
-    start_date: 2018-03-01
+    start_date: "2025-07-18"
     retries: 1
     retry_delay_sec: 300
   concurrency: 1
@@ -22,7 +22,30 @@ example_emr_serverless:
   tasks:
     start:
       operator: airflow.operators.empty.EmptyOperator
-      task_id: "start_dag"        
+      task_id: "start_dag"    
+    process_data:
+      operator: airflow.providers.amazon.aws.operators.emr.EmrServerlessStartJobOperator
+      task_id: "process_data"
+      application_id: "00ftko4ucfhuov09"
+      execution_role_arn: "arn:aws:iam::295216846643:role/emr-serverless-job-role"
+      job_driver:
+        sparkSubmit:
+          entryPoint: "s3://builderbinder-datalake-artifacts/datalake_artifacts/raw/dummy/main.py"
+          entryPointArguments:
+            - "--default_input"
+            - "2023-10-27"
+          sparkSubmitParameters: |
+            --conf spark.jars=/usr/share/aws/iceberg/lib/iceberg-spark3-runtime.jar
+            --conf spark.driver.cores=8
+            --conf spark.driver.memory=16g
+            --conf spark.executor.cores=4
+            --conf spark.executor.memory=8g
+            --conf spark.executor.instances=5
+            --conf spark.speculation=false
+            --conf spark.hadoop.fs.s3a.committer.name=directory
+            --conf spark.sql.parquet.fs.optimized.committer.name=directory
+      aws_conn_id: "aws_default"
+      wait_for_completion: true
     end:
       operator: airflow.operators.empty.EmptyOperator
       task_id: "end_dag"
