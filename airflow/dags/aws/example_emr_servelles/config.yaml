@@ -17,13 +17,16 @@ default:
 example_emr_serverless:
   description: "teste"
   task_groups:
-    tabela_1:
+    task_group_pipeline:
       tooltip: "this is a task group"
+      dependencies:
+        - start
   tasks:
     start:
       operator: airflow.operators.empty.EmptyOperator
       task_id: "start_dag"    
     process_data:
+      task_group_name: task_group_pipeline
       operator: airflow.providers.amazon.aws.operators.emr.EmrServerlessStartJobOperator
       task_id: "process_data"
       application_id: "00ftko4ucfhuov09"
@@ -49,4 +52,5 @@ example_emr_serverless:
     end:
       operator: airflow.operators.empty.EmptyOperator
       task_id: "end_dag"
-      dependencies: [start] 
+      dependencies: 
+        - task_group_pipeline
