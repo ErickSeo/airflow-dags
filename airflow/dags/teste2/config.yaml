@@ -19,7 +19,7 @@ teste:
     
     tasks:
         start_dag_render:
-          operator: airflow.operators.dummy.DummyOperator 
+          operator: airflow.operators.empty.EmptyOperator
           task_id: start_dag_render 
 
         upload_notebook_tabela_1:
