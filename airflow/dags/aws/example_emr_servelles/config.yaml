@@ -1,0 +1,26 @@
+default:
+  default_args:
+    owner: "default_owner"
+    start_date: 2018-03-01
+    retries: 1
+    retry_delay_sec: 300
+  concurrency: 1
+  max_active_runs: 1
+  dagrun_timeout_sec: 600
+  default_view: "graph"
+  orientation: "LR"
+  schedule: "0 1 * * *"
+
+example_emr_serverless:
+  description: "teste"
+  task_groups:
+    tabela_1:
+      tooltip: "this is a task group"
+  tasks:
+    start:
+      operator: airflow.operators.empty.EmptyOperator
+      task_id: "start_dag"        
+    end:
+      operator: airflow.operators.empty.EmptyOperator
+      task_id: "end_dag"
+      dependencies: [start] 
