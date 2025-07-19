@@ -6,5 +6,5 @@ config_file = Path.cwd() / "dags/repo/airflow/dags/aws/"
 
 load_yaml_dags(
     globals_dict=globals(),
-    config_file=config_file,
+    dags_folder=config_file,
 )
