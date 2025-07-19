@@ -11,7 +11,7 @@ default:
   orientation: "LR"
   schedule: "0 1 * * *"
 
-example_emr_serveless:
+example_datasync:
   description: "teste"
   task_groups:
     tabela_1:
