@@ -26,6 +26,7 @@ example_emr_serverless:
       operator: airflow.operators.empty.EmptyOperator
       task_id: "start_dag"    
     process_data:
+      dependencies: []
       task_group_name: task_group_pipeline
       operator: airflow.providers.amazon.aws.operators.emr.EmrServerlessStartJobOperator
       task_id: "process_data"
