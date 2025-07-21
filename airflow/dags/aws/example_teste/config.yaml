@@ -16,8 +16,6 @@ dummy_pipelineaaaaaa:
     task_groups:
       group1:
         tooltip: "This is the first task group."
-      group2:
-        tooltip: "This is the second task group."
         
     tasks:
       group1_task1:
