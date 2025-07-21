@@ -17,10 +17,10 @@ dummy_pipelineaaaaaa:
     tabela:
       tooltip: "this is a task group"
   tasks:
-    aaa:
+    start:
       operator: airflow.operators.empty.EmptyOperator
       task_id: "start_dag"
-    bbb:
+    end:
       operator: airflow.operators.empty.EmptyOperator
       task_id: "end_dag"
-      dependencies: [aaa]
+      dependencies: [start]
