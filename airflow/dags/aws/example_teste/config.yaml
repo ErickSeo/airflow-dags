@@ -19,8 +19,8 @@ example_empty_teste:
   tasks:
     start:
       operator: airflow.operators.empty.EmptyOperator
-      task_id: "start_dag"        
+      task_id: start_dag     
     end:
       operator: airflow.operators.empty.EmptyOperator
-      task_id: "end_dag"
+      task_id: end_dag
       dependencies: [start] 
