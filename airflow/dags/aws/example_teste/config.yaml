@@ -12,15 +12,15 @@ default:
   schedule_interval: "0 1 * * *"
 
 dummy_pipelineaaaaaa:
-    description: "This is a dummy pipeline for testing purposes."
-    tasks:
-      group1_task1:
-        operator: airflow.operators.empty.EmptyOperator
-        task_id: "task1"
-      group1_task2:
-        operator: airflow.operators.empty.EmptyOperator
-        task_id: "task2"
-      group1_task3:
-        operator: airflow.operators.empty.EmptyOperator
-        task_id: "task3"
-        dependencies: [group1_task1, group1_task2]
+  description: "This is a dummy pipeline for testing purposes."
+  tasks:
+    a:
+      operator: airflow.operators.empty.EmptyOperator
+      task_id: "a"
+    b:
+      operator: airflow.operators.empty.EmptyOperator
+      task_id: "b"
+    c:
+      operator: airflow.operators.empty.EmptyOperator
+      task_id: "c"
+      dependencies: [a, b]
