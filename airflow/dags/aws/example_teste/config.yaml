@@ -15,19 +15,15 @@ dummy_pipelineaaaaaa:
     description: "This is a dummy pipeline for testing purposes."
     task_groups:
       group1:
-        tooltip: "This is the first task group."
-        
+        tooltip: "This is the first task group."        
     tasks:
       group1_task1:
         operator: airflow.operators.empty.EmptyOperator
         task_id: "task1"
-        task_group_name: "group1"
       group1_task2:
         operator: airflow.operators.empty.EmptyOperator
         task_id: "task2"
-        task_group_name: "group1"
       group1_task3:
         operator: airflow.operators.empty.EmptyOperator
         task_id: "task3"
-        task_group_name: "group1"
         dependencies: ['group1_task1', 'group1_task2']
