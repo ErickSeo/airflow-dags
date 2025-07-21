@@ -11,7 +11,7 @@ default:
   orientation: "LR"
   schedule_interval: "0 1 * * *"
 
-dummy_pipelineaaaaaa:
+teste_pipelineaaaaaa:
   description: "This is a dummy pipeline for testing purposes."
   task_groups:
     tabela:
