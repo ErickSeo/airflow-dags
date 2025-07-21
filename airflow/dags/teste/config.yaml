@@ -19,7 +19,7 @@ dummy_pipeline:
         dependencies: []
     group2:
         tooltip: This is the second task group.
-        dependencies: ['group1']
+        dependencies: ['group1.task3']
     
   tasks:
     group1_task1:
@@ -36,7 +36,7 @@ dummy_pipeline:
             operator: airflow.operators.empty.EmptyOperator
             task_id: task3
             task_group_name: group1
-            dependencies: ['task1', 'task2']
+            dependencies: ['group1.task1', 'group1.task2']
     group2_task1:
             operator: airflow.operators.empty.EmptyOperator
             task_id: task1
@@ -51,4 +51,4 @@ dummy_pipeline:
             operator: airflow.operators.empty.EmptyOperator
             task_id: task3
             task_group_name: group2
-            dependencies: ['task1', 'task2']
+            dependencies: ['group2.task1', 'group2.task2']
