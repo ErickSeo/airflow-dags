@@ -4,11 +4,9 @@ default_args:
   retries: 1
   retry_delay: 300
 
-dag:
-  dag_id: example_dag
+example_dag:
   schedule_interval: "0 1 * * *"
   description: Example DAG
-
   tasks:
     task_1:
       operator: airflow.operators.dummy.DummyOperator
