@@ -20,7 +20,7 @@ dummy_pipeline:
     group2:
         tooltip: This is the second task group.
         dependencies: ['group1.task3']
-    
+
   tasks:
     group1_task1:
             operator: airflow.operators.empty.EmptyOperator
