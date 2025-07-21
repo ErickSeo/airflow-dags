@@ -9,7 +9,7 @@ default:
   dagrun_timeout_sec: 600
   default_view: "graph"
   orientation: "LR"
-  schedule_interval: "0 1 * * *"
+  schedule: "0 1 * * *"
 
 teste_pipelineaaaaaa:
   description: "This is a dummy pipeline for testing purposes"
