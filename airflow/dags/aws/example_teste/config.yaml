@@ -14,40 +14,24 @@ default:
 dummy_pipelineaaaaaa:
     description: "This is a dummy pipeline for testing purposes."
     task_groups:
-        group1:
-                tooltip: "This is the first task group."
-        group2:
-                tooltip: "This is the second task group."
+      group1:
+        tooltip: "This is the first task group."
+      group2:
+        tooltip: "This is the second task group."
         
     tasks:
-        group1_task1:
-            operator: airflow.operators.empty.EmptyOperator
-            task_id: "task1"
-            task_group_name: "group1"
-            
+      group1_task1:
+        operator: airflow.operators.empty.EmptyOperator
+        task_id: "task1"
+        task_group_name: "group1"
+
         group1_task2:
-            operator: airflow.operators.empty.EmptyOperator
-            task_id: "task2"
-            task_group_name: "group1"
-            
+          operator: airflow.operators.empty.EmptyOperator
+          task_id: "task2"
+          task_group_name: "group1"
+
         group1_task3:
-            operator: airflow.operators.empty.EmptyOperator
-            task_id: "task3"
-            task_group_name: "group1"
-            dependencies: ['task1', 'task2']
-            
-        group2_task1:
-            operator: airflow.operators.empty.EmptyOperator
-            task_id: "task1"
-            task_group_name: "group2"
-            
-        group2_task2:
-            operator: airflow.operators.empty.EmptyOperator
-            task_id: "task2"
-            task_group_name: "group2"
-            
-        group2_task3:
-            operator: airflow.operators.empty.EmptyOperator
-            task_id: "task3"
-            task_group_name: "group2"
-            dependencies: ['task1', 'task2']
+          operator: airflow.operators.empty.EmptyOperator
+          task_id: "task3"
+          task_group_name: "group1"
+          dependencies: ['task1', 'task2']
