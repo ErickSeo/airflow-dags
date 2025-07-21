@@ -37,7 +37,7 @@ dummy_pipeline:
             operator: airflow.operators.empty.EmptyOperator
             task_id: task3
             task_group_name: group1
-            dependencies: ['group1.task1', 'group1.task2']
+            dependencies: ['group1_task1', 'group1_task2']
     group2_task1:
             operator: airflow.operators.empty.EmptyOperator
             task_id: task1
@@ -52,4 +52,4 @@ dummy_pipeline:
             operator: airflow.operators.empty.EmptyOperator
             task_id: task3
             task_group_name: group2
-            dependencies: ['group2.task1', 'group2.task2']
+            dependencies: ['group2_task1', 'group2_task2']
