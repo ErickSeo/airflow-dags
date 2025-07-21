@@ -9,18 +9,21 @@ default:
   dagrun_timeout_sec: 600
   default_view: "graph"
   orientation: "LR"
-  schedule: "0 1 * * *"
+  schedule_interval: "0 1 * * *"
 
-example_empty_teste:
-  description: "teste"
+dummy_pipelineaaaaaa:
+  description: "This is a dummy pipeline for testing purposes."
   task_groups:
     tabela_1:
       tooltip: "this is a task group"
   tasks:
-    start:
+    a:
       operator: airflow.operators.empty.EmptyOperator
-      task_id: start_dag     
-    end:
+      task_id: "aa"
+    b:
       operator: airflow.operators.empty.EmptyOperator
-      task_id: end_dag
-      dependencies: [start] 
+      task_id: "bb"
+    c:
+      operator: airflow.operators.empty.EmptyOperator
+      task_id: "cc"
+      dependencies: [a, b]
