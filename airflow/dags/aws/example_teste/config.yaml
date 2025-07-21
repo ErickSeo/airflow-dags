@@ -19,11 +19,8 @@ dummy_pipelineaaaaaa:
   tasks:
     aaa:
       operator: airflow.operators.empty.EmptyOperator
-      task_id: "aaaaa"
+      task_id: "start_dag"
     bbb:
       operator: airflow.operators.empty.EmptyOperator
-      task_id: "bbbbb"
-    ccc:
-      operator: airflow.operators.empty.EmptyOperator
-      task_id: "ccccc"
+      task_id: "end_dag"
       dependencies: [aaa]
