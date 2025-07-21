@@ -1,54 +1,19 @@
-default:
-  default_args:
-    owner: "default_owner"
-    start_date: 2018-03-01
-    retries: 1
-    retry_delay_sec: 300
-  concurrency: 1
-  max_active_runs: 1
-  dagrun_timeout_sec: 600
-  default_view: "graph"
-  orientation: "LR"
-  schedule_interval: "0 1 * * *"
+default_args:
+  owner: "default_owner"
+  start_date: 2021-01-01
+  retries: 1
+  retry_delay: 300
 
-dummy_pipeline:
-  description: This is a dummy pipeline for testing purposes.
-  task_groups:
-    group1:
-        tooltip: This is the first task group.
-        dependencies: []
-    group2:
-        tooltip: This is the second task group.
-        dependencies: ['group1.task3']
+dag:
+  dag_id: example_dag
+  schedule_interval: "0 1 * * *"
+  description: Example DAG
 
   tasks:
-    group1_task1:
-            operator: airflow.operators.empty.EmptyOperator
-            task_id: task1
-            task_group_name: group1
-            dependencies: []
-    group1_task2:
-            operator: airflow.operators.empty.EmptyOperator
-            task_id: task2
-            task_group_name: group1
-            dependencies: []
-    group1_task3:
-            operator: airflow.operators.empty.EmptyOperator
-            task_id: task3
-            task_group_name: group1
-            dependencies: ['group1.task1', 'group1.task2']
-    group2_task1:
-            operator: airflow.operators.empty.EmptyOperator
-            task_id: task1
-            task_group_name: group2
-            dependencies: []
-    group2_task2:
-            operator: airflow.operators.empty.EmptyOperator
-            task_id: task2
-            task_group_name: group2
-            dependencies: []
-    group2_task3:
-            operator: airflow.operators.empty.EmptyOperator
-            task_id: task3
-            task_group_name: group2
-            dependencies: ['group2.task1', 'group2.task2']
+    task_1:
+      operator: airflow.operators.dummy.DummyOperator
+      dependencies: []
+    task_2:
+      operator: airflow.operators.dummy.DummyOperator
+      dependencies:
+        - task_1
