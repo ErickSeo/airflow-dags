@@ -13,6 +13,9 @@ default:
 
 dummy_pipelineaaaaaa:
   description: "This is a dummy pipeline for testing purposes."
+  task_groups:
+    tabela_1:
+      tooltip: "this is a task group"
   tasks:
     a:
       operator: airflow.operators.empty.EmptyOperator
