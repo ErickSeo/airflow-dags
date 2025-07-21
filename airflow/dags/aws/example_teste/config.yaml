@@ -12,7 +12,7 @@ default:
   schedule_interval: "0 1 * * *"
 
 teste_pipelineaaaaaa:
-  description: "This is a dummy pipeline for testing purposes."
+  description: "This is a dummy pipeline for testing purposes"
   task_groups:
     tabela:
       tooltip: "this is a task group"
