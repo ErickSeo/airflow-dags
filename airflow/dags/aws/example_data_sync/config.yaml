@@ -1,26 +1,25 @@
 default:
   default_args:
-    owner: "default_owner"
-    start_date: 2018-03-01
+    start_date: 2025-07-21
     retries: 1
     retry_delay_sec: 300
-  concurrency: 1
-  max_active_runs: 1
-  dagrun_timeout_sec: 600
-  default_view: "graph"
-  orientation: "LR"
-  schedule: "0 1 * * *"
+  tags: ['aws', 'datasync', 'landing']
 
-example_datasync:
-  description: "teste"
+test_datasync_operator:    
+  description: Test DataSync Operator
+  render_template_as_native_obj: True
+  schedule: 8 1 * * *
+  owner: ['hiroyukii.seo@gmail.com']
   task_groups:
-    tabela_1:
-      tooltip: "this is a task group"
+    landing:
+      tooltip: This group process pipeline
+      dependencies: []
+    
   tasks:
-    start:
-      operator: airflow.operators.empty.EmptyOperator
-      task_id: "start_dag"
-    end:
-      operator: airflow.operators.empty.EmptyOperator
-      task_id: "end_dag"
-      dependencies: [start]
+    landing.task1:
+      operator: airflow.providers.amazon.aws.operators.datasync.DataSyncOperator
+      task_arn: {{  var.value.built_landing_datasync_arn }}
+      aws_conn_id: aws_default
+      wait_for_completion: True
+      task_group_name: landing
+      dependencies: []
