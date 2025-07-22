@@ -1,14 +1,11 @@
 default:
   default_args:
+    start_date: 2025-07-21
+    retries: 1
     retry_delay_sec: 300
-  concurrency: 1
-  max_active_runs: 1
-  default_view: "graph"
-  orientation: "LR"
+  tags: ['teste']
 
-dummy_pipeline:
-  start_date: 2025-07-21
-  retries: 1
+dummy_pipeline:    
   description: This is a dummy pipeline for testing purposes.
   render_template_as_native_obj: True
   schedule: 8 1 * * *
