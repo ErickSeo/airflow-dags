@@ -1,5 +1,6 @@
 default:
   default_args:
+    start_date: 2018-03-01
     retries: 1
     retry_delay_sec: 300
   concurrency: 1
@@ -15,40 +16,40 @@ dummy_pipeline:
   owner: ['hiroyukii.seo@gmail.com']
   task_groups:
     group1:
-        tooltip: This is the first task group.
-        dependencies: []
+      tooltip: This is the first task group.
+      dependencies: []
     group2:
-        tooltip: This is the second task group.
-        dependencies: ['group1.task3']
+      tooltip: This is the second task group.
+      dependencies: ['group1.task3']
     
   tasks:
     group1.task1:
-            operator: airflow.operators.empty.EmptyOperator
-            task_id: task1
-            task_group_name: group1
-            dependencies: []
+      operator: airflow.operators.empty.EmptyOperator
+      task_id: task1
+      task_group_name: group1
+      dependencies: []
     group1.task2:
-            operator: airflow.operators.empty.EmptyOperator
-            task_id: task2
-            task_group_name: group1
-            dependencies: []
+      operator: airflow.operators.empty.EmptyOperator
+      task_id: task2
+      task_group_name: group1
+      dependencies: []
     group1.task3:
-            operator: airflow.operators.empty.EmptyOperator
-            task_id: task3
-            task_group_name: group1
-            dependencies: ['group1.task1', 'group1.task2']
+      operator: airflow.operators.empty.EmptyOperator
+      task_id: task3
+      task_group_name: group1
+      dependencies: ['group1.task1', 'group1.task2']
     group2.task1:
-            operator: airflow.operators.empty.EmptyOperator
-            task_id: task1
-            task_group_name: group2
-            dependencies: []
+      operator: airflow.operators.empty.EmptyOperator
+      task_id: task1
+      task_group_name: group2
+      dependencies: []
     group2.task2:
-            operator: airflow.operators.empty.EmptyOperator
-            task_id: task2
-            task_group_name: group2
-            dependencies: []
+      operator: airflow.operators.empty.EmptyOperator
+      task_id: task2
+      task_group_name: group2
+      dependencies: []
     group2.task3:
-            operator: airflow.operators.empty.EmptyOperator
-            task_id: task3
-            task_group_name: group2
-            dependencies: ['group2.task1', 'group2.task2']
+      operator: airflow.operators.empty.EmptyOperator
+      task_id: task3
+      task_group_name: group2
+      dependencies: ['group2.task1', 'group2.task2']
