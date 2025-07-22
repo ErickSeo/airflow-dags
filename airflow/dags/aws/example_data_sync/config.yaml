@@ -18,7 +18,7 @@ test_datasync_operator:
   tasks:
     landing.task1:
       operator: airflow.providers.amazon.aws.operators.datasync.DataSyncOperator
-      task_arn: {{  var.value.built_landing_datasync_arn }}
+      task_arn: "{{  var.value.built_landing_datasync_arn  }}"
       aws_conn_id: aws_default
       wait_for_completion: True
       task_group_name: landing
