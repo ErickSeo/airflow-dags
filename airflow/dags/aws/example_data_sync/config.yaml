@@ -4,6 +4,7 @@ default:
     retries: 1
     retry_delay_sec: 300
   tags: ['aws', 'datasync', 'landing']
+  max_active_runs: 1
 
 test_datasync_operator:    
   description: Test DataSync Operator

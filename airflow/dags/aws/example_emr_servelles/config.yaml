@@ -1,55 +1,40 @@
 default:
   default_args:
-    owner: "default_owner"
-    start_date: "2025-07-18"
+    start_date: 2025-07-21
     retries: 1
-    retry_delay_sec: 5
-  concurrency: 1
+    retry_delay_sec: 300
+  tags: ['aws', 'emr_serveless', 'raw']
   max_active_runs: 1
-  dagrun_timeout_sec: 600
-  default_view: "graph"
-  orientation: "LR"
-  schedule: "0 1 * * *"
-  tags:
-    - "aws"
-    - "emr_serverless"
 
-example_emr_serverless:
-  description: "teste"
+test_emr_serveless_operator:    
+  description: Test EmrServeless Operator
+  render_template_as_native_obj: True
+  schedule: 8 1 * * *
+  owner: ['hiroyukii.seo@gmail.com']
   task_groups:
-    task_group_pipeline:
-      tooltip: "this is a task group"
-      dependencies: ['start']
-  tasks:
-    start:
-      operator: airflow.operators.empty.EmptyOperator
-      task_id: "start_dag"    
-    process_data:
+    raw:
+      tooltip: This group process pipeline
       dependencies: []
-      task_group_name: task_group_pipeline
+  tasks:
+    raw.spark_dummy:
       operator: airflow.providers.amazon.aws.operators.emr.EmrServerlessStartJobOperator
-      task_id: "process_data"
-      application_id: "00ftko4ucfhuov09"
-      execution_role_arn: "arn:aws:iam::295216846643:role/emr-serverless-job-role"
+      application_id: "{{  var.json.emr_serveless_raw.application_id  }}"
+      execution_role_arn: "{{  var.json.emr_serveless_raw.execution_role_arn  }}"
       job_driver:
         sparkSubmit:
-          entryPoint: "s3://builderbinder-datalake-artifacts/datalake_artifacts/raw/dummy/main.py"
-          entryPointArguments:
-            - "--default_input"
-            - "2023-10-27"
-          sparkSubmitParameters: >
-            --conf spark.jars=/usr/share/aws/iceberg/lib/iceberg-spark3-runtime.jar
-            --conf spark.driver.cores=8
-            --conf spark.driver.memory=16g
-            --conf spark.executor.cores=4
-            --conf spark.executor.memory=8g
-            --conf spark.executor.instances=5
-            --conf spark.speculation=false
-            --conf spark.hadoop.fs.s3a.committer.name=directory
-            --conf spark.sql.parquet.fs.optimized.committer.name=directory
-      aws_conn_id: "aws_default"
-      wait_for_completion: true
-    end:
-      operator: airflow.operators.empty.EmptyOperator
-      task_id: "end_dag"
-      dependencies: ['task_group_pipeline']
+            entryPoint: s3://builderbinder-datalake-artifacts/datalake_artifacts/raw/dummy/main.py
+            entryPointArguments: ['--default_input', '{{ ds }}']
+            sparkSubmitParameters: >
+              --conf spark.jars=/usr/share/aws/iceberg/lib/iceberg-spark3-runtime.jar
+              --conf spark.driver.cores=8
+              --conf spark.driver.memory=16g
+              --conf spark.executor.cores=4
+              --conf spark.executor.memory=8g
+              --conf spark.speculation=false
+              --conf spark.hadoop.fs.s3a.committer.name=directory
+              --conf spark.sql.parquet.fs.optimized.committer.name=directory
+              --conf spark.executor.instances=3
+      aws_conn_id: aws_default
+      wait_for_completion: True
+      task_group_name: raw
+      dependencies: []
