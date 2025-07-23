@@ -33,7 +33,7 @@ test_sagemaker_operator:
           ContainerEntrypoint:
             - python3
             - /opt/ml/processing/input/code/hello-world/hello-world-job.py
-          ContainerArguments: []
+          ContainerArguments: ['--execution_date', '{{ ds }}']
         ProcessingInputs:
           - InputName: "code"
             S3Input: 
