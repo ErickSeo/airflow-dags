@@ -6,8 +6,8 @@ default:
   tags: ['aws', 'emr_serveless', 'raw']
   max_active_runs: 1
 
-test_emr_serveless_operator:    
-  description: Test EmrServeless Operator
+test_built_pipeline:    
+  description: Test Built EmrServeless Operator
   render_template_as_native_obj: True
   schedule: 8 1 * * *
   owner: ['hiroyukii.seo@gmail.com']
