@@ -42,7 +42,12 @@ test_sagemaker_operator:
               S3DataType: S3Prefix
               S3InputMode: File
         ProcessingOutputConfig:
-          Outputs: []
+          Outputs: 
+            - OutputName: "model-output"
+              S3Output: 
+                S3Uri: s3://builderbinder-datalake-artifacts/datalake_artifacts/datascience/notebooks/sagemaker/outputs/model-helloworld{{ ts_nodash }}
+                LocalPath: /opt/ml/processing/output/
+                S3UploadMode: EndOfJob
       wait_for_completion: True
       task_group_name: model
       dependencies: []
