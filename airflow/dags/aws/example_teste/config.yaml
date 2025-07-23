@@ -3,43 +3,46 @@ default:
     start_date: 2025-07-21
     retries: 1
     retry_delay_sec: 300
-  tags: ['teste']
+  tags: ['aws', 'emr_serveless', 'raw']
+  max_active_runs: 1
 
-dummy_pipeline:    
-  description: This is a dummy pipeline for testing purposes.
+test_emr_serveless_operator:    
+  description: Test EmrServeless Operator
   render_template_as_native_obj: True
   schedule: 8 1 * * *
   owner: ['hiroyukii.seo@gmail.com']
   task_groups:
-    group1:
-      tooltip: This is the first task group.
+    raw:
+      tooltip: This group process pipeline
       dependencies: []
-    group2:
-      tooltip: This is the second task group.
-      dependencies: ['group1.task3']
-    
   tasks:
-    group1.task1:
-      operator: airflow.operators.empty.EmptyOperator
-      task_group_name: group1
+    raw.built_sync:
+      operator: airflow.providers.amazon.aws.operators.datasync.DataSyncOperator
+      task_arn: "{{  var.value.built_landing_datasync_arn  }}"
+      aws_conn_id: aws_default
+      wait_for_completion: True
+      task_group_name: raw
       dependencies: []
-    group1.task2:
-      operator: airflow.operators.empty.EmptyOperator
-      task_group_name: group1
-      dependencies: []
-    group1.task3:
-      operator: airflow.operators.empty.EmptyOperator
-      task_group_name: group1
-      dependencies: ['group1.task1', 'group1.task2']
-    group2.task1:
-      operator: airflow.operators.empty.EmptyOperator
-      task_group_name: group2
-      dependencies: []
-    group2.task2:
-      operator: airflow.operators.empty.EmptyOperator
-      task_group_name: group2
-      dependencies: []
-    group2.task3:
-      operator: airflow.operators.empty.EmptyOperator
-      task_group_name: group2
-      dependencies: ['group2.task1', 'group2.task2']
+
+    raw.spark_dummy:
+      operator: airflow.providers.amazon.aws.operators.emr.EmrServerlessStartJobOperator
+      application_id: "{{  var.json.emr_serveless_raw.application_id  }}"
+      execution_role_arn: "{{  var.json.emr_serveless_raw.execution_role_arn  }}"
+      job_driver:
+        sparkSubmit:
+            entryPoint: s3://builderbinder-datalake-artifacts/datalake_artifacts/raw/dummy/main.py
+            entryPointArguments: ['--default_input', '{{ ds }}']
+            sparkSubmitParameters: >
+              --conf spark.jars=/usr/share/aws/iceberg/lib/iceberg-spark3-runtime.jar
+              --conf spark.driver.cores=8
+              --conf spark.driver.memory=16g
+              --conf spark.executor.cores=4
+              --conf spark.executor.memory=8g
+              --conf spark.speculation=false
+              --conf spark.hadoop.fs.s3a.committer.name=directory
+              --conf spark.sql.parquet.fs.optimized.committer.name=directory
+              --conf spark.executor.instances=3
+      aws_conn_id: aws_default
+      wait_for_completion: True
+      task_group_name: raw
+      dependencies: ['raw.built_sync']
