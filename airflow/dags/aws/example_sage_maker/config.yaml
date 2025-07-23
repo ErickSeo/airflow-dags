@@ -1,0 +1,48 @@
+default:
+  default_args:
+    start_date: 2025-07-22
+    retries: 1
+    retry_delay_sec: 300
+  tags: ['aws', 'sagemaker', 'model']
+  max_active_runs: 1
+
+test_sagemaker_operator:    
+  description: Test Sagemaker Operator
+  render_template_as_native_obj: True
+  schedule: 8 1 * * *
+  owner: ['hiroyukii.seo@gmail.com']
+  task_groups:
+    model:
+      tooltip: This group process pipeline
+      dependencies: []
+  tasks:
+    model.hello_world:
+      operator: airflow.providers.amazon.aws.operators.sagemaker.SageMakerProcessingOperator
+      aws_conn_id: aws_default
+      config:
+        RoleArn: "{{  var.value.sagemaker_arn  }}"
+        ProcessingJobName: "model_hello_world_{{ ts_nodash }}"
+        ProcessingResources:
+          ClusterConfig:
+            InstanceCount: 1
+            InstanceType: ml.t3.medium
+            VolumeSizeInGB: 50
+        
+        AppSpecification:
+          ImageUri: 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-training:1.13.1-cpu-py39-ubuntu20.04-sagemaker
+          ContainerEntrypoint:
+            - python3
+            - /opt/ml/processing/input/code/hello-world/hello-world-job.py
+          ContainerArguments: []
+        ProcessingInputs:
+          - InputName: "code"
+            S3Input: 
+              S3Uri: s3://builderbinder-datalake-artifacts/datalake_artifacts/datascience/notebooks/hello-world/hello-world-job.py
+              LocalPath: /opt/ml/processing/input/code/
+              S3DataType: S3Prefix
+              S3InputMode: File
+        ProcessingOutputConfig:
+          Outputs: []
+      wait_for_completion: True
+      task_group_name: model
+      dependencies: []
