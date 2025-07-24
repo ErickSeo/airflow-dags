@@ -1,4 +1,4 @@
-[!info]- Info
+[!INFO]- Info
 > > [!tldr]- Description  
 > >  Teste
 > 
