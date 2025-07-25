@@ -1,0 +1,45 @@
+default:
+  default_args:
+    start_date: 2025-07-24
+    retries: 1
+    retry_delay_sec: 300
+  tags: ['teste']
+  max_active_runs: 1
+
+empty_pipeline_teste:    
+  description: This is a dummy pipeline for testing purposes.
+  render_template_as_native_obj: True
+  schedule: 8 1 * * *
+  owner: ['hiroyukii.seo@gmail.com']
+  task_groups:
+    group1:
+      tooltip: This is the first task group.
+      dependencies: []
+    group2:
+      tooltip: This is the second task group.
+      dependencies: ['group1']
+  tasks:
+    group1.task1:
+      operator: airflow.operators.empty.EmptyOperator
+      task_group_name: group1
+      dependencies: []
+    group1.task2:
+      operator: airflow.operators.empty.EmptyOperator
+      task_group_name: group1
+      dependencies: []
+    group1.task3:
+      operator: airflow.operators.empty.EmptyOperator
+      task_group_name: group1
+      dependencies: ['group1.task1', 'group1.task2']
+    group2.task1:
+      operator: airflow.operators.empty.EmptyOperator
+      task_group_name: group2
+      dependencies: []
+    group2.task2:
+      operator: airflow.operators.empty.EmptyOperator
+      task_group_name: group2
+      dependencies: []
+    group2.task3:
+      operator: airflow.operators.empty.EmptyOperator
+      task_group_name: group2
+      dependencies: ['group2.task1', 'group2.task2']
