@@ -4,7 +4,7 @@
 > Essa DAG é voltada para controle, auditoria e análise da execução de pipelines no Airflow, e está categorizada com as tags `data-gov`, `airflow` e `dag`.
 
 ⏰ Schedule:  
-<hr />Executada diariamente à meia-noite UTC (`0 0 * * *`)
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Executada diariamente à meia-noite UTC (`0 0 * * *`)
 
 
 ---
