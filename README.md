@@ -21,7 +21,7 @@
 ### 📁 GCS Location - Yaml Output
 <br>
 **Exemplo**:  
-&nbsp;composer: [airflow-dataeng-210](https://f15ee860cc8342aa96394d786a0ef819-dot-us-east1.composer.googleusercontent.com/)  
+\tcomposer: [airflow-dataeng-210](https://f15ee860cc8342aa96394d786a0ef819-dot-us-east1.composer.googleusercontent.com/)  
 projeto: allos-eng-dados-nonprd  
 environment: homolog  
 
