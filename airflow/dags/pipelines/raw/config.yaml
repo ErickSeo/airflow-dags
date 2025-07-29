@@ -3,17 +3,22 @@ default:
     start_date: 2025-07-28
     retries: 1
     retry_delay_sec: 300
-  tags: ['aws', 'datasync', 'landing']
+  tags: ['aws', 'datasync', 'landing', 'raw']
   max_active_runs: 1
 
 raw_outlet:    
   description: Raw Outlet
   render_template_as_native_obj: True
-  schedule: 8 1 * * *
+  
+  schedule: "8 1 * * *"
+  
   owner: ['hiroyukii.seo@gmail.com']
   task_groups:
     landing:
       tooltip: This process sync built landing zone
+      dependencies: []
+    raw:
+      tooltip: This process built raw zone
       dependencies: []
   tasks:
     landing.builty_landing:
@@ -24,7 +29,7 @@ raw_outlet:
       task_group_name: landing
       dependencies: []
 
-    landing.spark_dummy:
+    raw.spark_dummy:
       operator: airflow.providers.amazon.aws.operators.emr.EmrServerlessStartJobOperator
       application_id: "{{  var.json.emr_serveless_raw.application_id  }}"
       execution_role_arn: "{{  var.json.emr_serveless_raw.execution_role_arn  }}"
@@ -44,6 +49,6 @@ raw_outlet:
               --conf spark.executor.instances=3
       aws_conn_id: aws_default
       wait_for_completion: True
-      task_group_name: landing
-      dependencies: ['raw.built_sync']
-      outlets: [landing.spark_dummy]
+      task_group_name: raw
+      dependencies: ['landing.builty_landing']
+      outlets: [raw.spark_dummy]
