@@ -1,6 +1,6 @@
 default:
   default_args:
-    start_date: 2025-07-22
+    start_date: 2025-07-28
     retries: 1
     retry_delay_sec: 300
   tags: ['aws', 'sagemaker', 'model']
@@ -29,15 +29,12 @@ test_sagemaker_operator:
             VolumeSizeInGB: 50
         
         AppSpecification:
-          ImageUri: 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-training:1.13.1-cpu-py39-ubuntu20.04-sagemaker
-          ContainerEntrypoint:
-            - python3
-            - /opt/ml/processing/input/code/hello-world/hello-world-job.py
-          ContainerArguments: ['--execution_date', '{{ ds }}']
+          ImageUri: 295216846643.dkr.ecr.us-east-1.amazonaws.com/sagemaker-processing-container-helloworld:20250729164015
+          ContainerArguments: ['--execution_date', '{{ ds }}', '--name', 'TESTE']
         ProcessingInputs:
           - InputName: "code"
             S3Input: 
-              S3Uri: s3://builderbinder-datalake-artifacts/datalake_artifacts/datascience/notebooks/hello-world/hello-world-job.py
+              S3Uri: s3://builderbinder-datalake-artifacts/sagemaker/inputs
               LocalPath: /opt/ml/processing/input/code/
               S3DataType: S3Prefix
               S3InputMode: File
@@ -45,9 +42,10 @@ test_sagemaker_operator:
           Outputs: 
             - OutputName: "model-output"
               S3Output: 
-                S3Uri: s3://builderbinder-datalake-artifacts/datalake_artifacts/datascience/notebooks/sagemaker/outputs/model-helloworld{{ ts_nodash }}
+                S3Uri: s3://builderbinder-datalake-artifacts/sagemaker/outputs/model-helloworld{{ ts_nodash }}
                 LocalPath: /opt/ml/processing/output/
                 S3UploadMode: EndOfJob
       wait_for_completion: True
       task_group_name: model
       dependencies: []
+      outlets: [model.hello_world]
