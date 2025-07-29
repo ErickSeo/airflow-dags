@@ -1,6 +1,6 @@
 default:
   default_args:
-    start_date: 2025-07-24
+    start_date: 2025-07-28
     retries: 1
     retry_delay_sec: 300
   tags: ['teste']
@@ -15,9 +15,11 @@ empty_pipeline_teste:
     group1:
       tooltip: This is the first task group.
       dependencies: []
+      outlets: [group1]
     group2:
       tooltip: This is the second task group.
       dependencies: ['group1']
+      outlets: [group2]
   tasks:
     group1.task1:
       operator: airflow.operators.empty.EmptyOperator
