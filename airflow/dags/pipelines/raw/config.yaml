@@ -3,40 +3,35 @@ default:
     start_date: 2025-07-28
     retries: 1
     retry_delay_sec: 300
-  tags: ['aws', 'datasync', 'landing', 'raw']
+  tags: ['aws', 'emr_serveless', 'raw']
   max_active_runs: 1
 
-raw_outlet:    
-  description: Raw Outlet
+builty_raw_process:    
+  description: Builty Raw Process
   render_template_as_native_obj: True
-  
-  schedule: "8 1 * * *"
-  
+  schedule: 0 5 1,2 * *
   owner: ['hiroyukii.seo@gmail.com']
   task_groups:
-    landing:
-      tooltip: This process sync built landing zone
-      dependencies: []
     raw:
-      tooltip: This process built raw zone
+      tooltip: This group process raw zone
       dependencies: []
   tasks:
-    landing.builty_landing:
+    raw.built_sync:
       operator: airflow.providers.amazon.aws.operators.datasync.DataSyncOperator
       task_arn: "{{  var.value.built_landing_datasync_arn  }}"
       aws_conn_id: aws_default
       wait_for_completion: True
-      task_group_name: landing
+      task_group_name: raw
       dependencies: []
 
-    raw.spark_dummy:
+    raw.builty:
       operator: airflow.providers.amazon.aws.operators.emr.EmrServerlessStartJobOperator
       application_id: "{{  var.json.emr_serveless_raw.application_id  }}"
       execution_role_arn: "{{  var.json.emr_serveless_raw.execution_role_arn  }}"
       job_driver:
         sparkSubmit:
-            entryPoint: s3://builderbinder-datalake-artifacts/datalake_artifacts/raw/dummy/main.py
-            entryPointArguments: ['--default_input', '{{ ds }}']
+            entryPoint: s3://builderbinder-datalake-artifacts/datalake_artifacts/raw/builty/main.py
+            entryPointArguments: ['--schema', 'builty', '--table_name', 'building_permits', '--bucket_landing_name', 'builderbinder-datalake-landing']
             sparkSubmitParameters: >
               --conf spark.jars=/usr/share/aws/iceberg/lib/iceberg-spark3-runtime.jar
               --conf spark.driver.cores=8
@@ -46,9 +41,9 @@ raw_outlet:
               --conf spark.speculation=false
               --conf spark.hadoop.fs.s3a.committer.name=directory
               --conf spark.sql.parquet.fs.optimized.committer.name=directory
-              --conf spark.executor.instances=3
+              --conf spark.executor.instances=5
       aws_conn_id: aws_default
       wait_for_completion: True
       task_group_name: raw
-      dependencies: ['landing.builty_landing']
-      outlets: [raw.spark_dummy]
+      dependencies: ['raw.built_sync']
+      outlets: [raw.builty]
