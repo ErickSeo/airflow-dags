@@ -31,13 +31,6 @@ test_sagemaker_operator:
         AppSpecification:
           ImageUri: 295216846643.dkr.ecr.us-east-1.amazonaws.com/sagemaker-processing-container-helloworld:20250729164015
           ContainerArguments: ['--execution_date', '{{ ds }}', '--name', 'TESTE']
-        ProcessingInputs:
-          - InputName: "code"
-            S3Input: 
-              S3Uri: s3://builderbinder-datalake-artifacts/sagemaker/inputs
-              LocalPath: /opt/ml/processing/input/code/
-              S3DataType: S3Prefix
-              S3InputMode: File
         ProcessingOutputConfig:
           Outputs: 
             - OutputName: "model-output"
