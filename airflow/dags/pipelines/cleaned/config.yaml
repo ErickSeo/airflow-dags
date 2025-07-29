@@ -1,0 +1,44 @@
+default:
+  default_args:
+    start_date: 2025-07-28
+    retries: 1
+    retry_delay_sec: 300
+  tags: ['aws', 'datasync', 'cleaned']
+  max_active_runs: 1
+
+cleaned_outlet:    
+  description: Test Outlet
+  render_template_as_native_obj: True
+  
+  schedule:
+    datasets: "(raw.spark_dummy)"
+  
+  owner: ['hiroyukii.seo@gmail.com']
+  task_groups:
+    cleaned:
+      tooltip: This process sync built cleaned zone
+      dependencies: []
+  tasks:
+    cleaned.spark_dummy:
+      operator: airflow.providers.amazon.aws.operators.emr.EmrServerlessStartJobOperator
+      application_id: "{{  var.json.emr_serveless_raw.application_id  }}"
+      execution_role_arn: "{{  var.json.emr_serveless_raw.execution_role_arn  }}"
+      job_driver:
+        sparkSubmit:
+            entryPoint: s3://builderbinder-datalake-artifacts/datalake_artifacts/raw/dummy/main.py
+            entryPointArguments: ['--default_input', '{{ ds }}']
+            sparkSubmitParameters: >
+              --conf spark.jars=/usr/share/aws/iceberg/lib/iceberg-spark3-runtime.jar
+              --conf spark.driver.cores=8
+              --conf spark.driver.memory=16g
+              --conf spark.executor.cores=4
+              --conf spark.executor.memory=8g
+              --conf spark.speculation=false
+              --conf spark.hadoop.fs.s3a.committer.name=directory
+              --conf spark.sql.parquet.fs.optimized.committer.name=directory
+              --conf spark.executor.instances=3
+      aws_conn_id: aws_default
+      wait_for_completion: True
+      task_group_name: cleaned
+      dependencies: []
+      outlets: [cleaned.spark_dummy]
