@@ -9,8 +9,6 @@ default:
 cleaned_outlet:    
   description: Test Outlet
   render_template_as_native_obj: True
-  schedule: 
-    datasets: "(raw.spark_dummy)"
   owner: ['hiroyukii.seo@gmail.com']
   task_groups:
     cleaned:
