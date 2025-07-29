@@ -30,7 +30,7 @@ test_sagemaker_operator:
         
         AppSpecification:
           ImageUri: 295216846643.dkr.ecr.us-east-1.amazonaws.com/sagemaker-processing-container-helloworld:20250729164015
-          ContainerArguments: ['--execution_date', '{{ ds }}', '--name', 'TESTE']
+          ContainerArguments: ['--name', 'Bruno PANFA']
         ProcessingOutputConfig:
           Outputs: 
             - OutputName: "model-output"
