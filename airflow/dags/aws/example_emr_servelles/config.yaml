@@ -1,6 +1,6 @@
 default:
   default_args:
-    start_date: 2025-07-21
+    start_date: 2025-07-28
     retries: 1
     retry_delay_sec: 300
   tags: ['aws', 'emr_serveless', 'raw']
@@ -16,6 +16,14 @@ test_emr_serveless_operator:
       tooltip: This group process pipeline
       dependencies: []
   tasks:
+    raw.built_sync:
+      operator: airflow.providers.amazon.aws.operators.datasync.DataSyncOperator
+      task_arn: "{{  var.value.built_landing_datasync_arn  }}"
+      aws_conn_id: aws_default
+      wait_for_completion: True
+      task_group_name: raw
+      dependencies: []
+
     raw.spark_dummy:
       operator: airflow.providers.amazon.aws.operators.emr.EmrServerlessStartJobOperator
       application_id: "{{  var.json.emr_serveless_raw.application_id  }}"
@@ -37,4 +45,5 @@ test_emr_serveless_operator:
       aws_conn_id: aws_default
       wait_for_completion: True
       task_group_name: raw
-      dependencies: []
+      dependencies: ['raw.built_sync']
+      outlets: [raw.spark_dummy]
