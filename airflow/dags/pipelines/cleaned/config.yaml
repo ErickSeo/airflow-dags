@@ -9,6 +9,11 @@ default:
 cleaned_outlet:    
   description: Test Outlet
   render_template_as_native_obj: True
+  schedule: 
+    __type__: builtins.list
+    items:
+      - __type__: airflow.sdk.Asset
+        uri: raw.spark_dummy
   owner: ['hiroyukii.seo@gmail.com']
   task_groups:
     cleaned:
