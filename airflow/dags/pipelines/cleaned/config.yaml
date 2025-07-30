@@ -3,43 +3,45 @@ default:
     start_date: 2025-07-28
     retries: 1
     retry_delay_sec: 300
-  tags: ['aws', 'datasync', 'cleaned']
+  tags: ['aws', 'emr_serveless', 'cleaned']
   max_active_runs: 1
 
-cleaned_outlet:    
-  description: Test Outlet
+builty_cleaned_process:    
+  description: Builty Raw Process
   render_template_as_native_obj: True
   schedule: 
     __type__: builtins.list
     items:
       - __type__: airflow.sdk.Asset
-        uri: raw.spark_dummy
+        uri: raw.builty
   owner: ['hiroyukii.seo@gmail.com']
   task_groups:
     cleaned:
-      tooltip: This process sync built cleaned zone
+      tooltip: This group process cleaned zone
       dependencies: []
   tasks:
-    cleaned.spark_dummy:
+    cleaned.builty:
       operator: airflow.providers.amazon.aws.operators.emr.EmrServerlessStartJobOperator
       application_id: "{{  var.json.emr_serveless_raw.application_id  }}"
       execution_role_arn: "{{  var.json.emr_serveless_raw.execution_role_arn  }}"
       job_driver:
         sparkSubmit:
-            entryPoint: s3://builderbinder-datalake-artifacts/datalake_artifacts/raw/dummy/main.py
-            entryPointArguments: ['--default_input', '{{ ds }}']
+            entryPoint: s3://builderbinder-datalake-artifacts/datalake_artifacts/cleaned/builty/main.py
+            entryPointArguments: ['--schema', 'builty', '--table_name', 'building_permits']
             sparkSubmitParameters: >
               --conf spark.jars=/usr/share/aws/iceberg/lib/iceberg-spark3-runtime.jar
-              --conf spark.driver.cores=8
-              --conf spark.driver.memory=16g
-              --conf spark.executor.cores=4
-              --conf spark.executor.memory=8g
+              --conf spark.driver.cores=2
+              --conf spark.driver.memory=4g
+              --conf spark.executor.cores=8
+              --conf spark.executor.memory=30g
+              --conf spark-default-parallelism=160
+              --conf spark-sql-shuffle-partitions=160
               --conf spark.speculation=false
               --conf spark.hadoop.fs.s3a.committer.name=directory
               --conf spark.sql.parquet.fs.optimized.committer.name=directory
-              --conf spark.executor.instances=3
+              --conf spark.executor.instances=10
       aws_conn_id: aws_default
       wait_for_completion: True
       task_group_name: cleaned
       dependencies: []
-      outlets: [cleaned.spark_dummy]
+      outlets: [cleaned.builty]

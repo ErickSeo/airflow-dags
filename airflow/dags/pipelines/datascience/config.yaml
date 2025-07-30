@@ -1,0 +1,44 @@
+default:
+  default_args:
+    start_date: 2025-07-29
+    retries: 1
+    retry_delay_sec: 300
+  tags: ['aws', 'sagemaker', 'model']
+  max_active_runs: 1
+
+test_sagemaker_operator:    
+  description: Test Sagemaker Operator
+  render_template_as_native_obj: True
+  schedule: 8 1 * * *
+  owner: ['hiroyukii.seo@gmail.com']
+  task_groups:
+    model:
+      tooltip: This group process pipeline
+      dependencies: []
+  tasks:
+    model.hello_world:
+      operator: airflow.providers.amazon.aws.operators.sagemaker.SageMakerProcessingOperator
+      aws_conn_id: aws_default
+      config:
+        RoleArn: "{{  var.value.sagemaker_arn  }}"
+        ProcessingJobName: "model-helloworld{{ ts_nodash }}"
+        ProcessingResources:
+          ClusterConfig:
+            InstanceCount: 1
+            InstanceType: ml.t3.medium
+            VolumeSizeInGB: 50
+        
+        AppSpecification:
+          ImageUri: 295216846643.dkr.ecr.us-east-1.amazonaws.com/sagemaker-processing-container-helloworld:20250730000254
+          ContainerArguments: ['--name', 'Bruno PANFAAAAAAFEEEEETAAA']
+        ProcessingOutputConfig:
+          Outputs: 
+            - OutputName: "model-output"
+              S3Output: 
+                S3Uri: s3://builderbinder-datalake-artifacts/sagemaker/outputs/model-helloworld{{ ts_nodash }}
+                LocalPath: /opt/ml/processing/output/
+                S3UploadMode: EndOfJob
+      wait_for_completion: True
+      task_group_name: model
+      dependencies: []
+      outlets: [model.hello_world]
