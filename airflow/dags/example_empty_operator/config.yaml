@@ -48,12 +48,12 @@ empty_pipeline_teste2:
   tasks:
     group2.task1:
       operator: airflow.operators.empty.EmptyOperator
-      task_group_name: group1
+      task_group_name: group2
       dependencies: []
       outlets: [group2.task1]
     group2.task2:
       operator: airflow.operators.empty.EmptyOperator
-      task_group_name: group1
+      task_group_name: group2
       dependencies: []
       outlets: [group2.task2]
 
@@ -73,7 +73,7 @@ empty_pipeline_teste3:
   tasks:
     group3.task1:
       operator: airflow.operators.empty.EmptyOperator
-      task_group_name: group1
+      task_group_name: group3
       dependencies: []
       outlets: [group3.task1]
     
