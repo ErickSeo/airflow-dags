@@ -6,7 +6,7 @@ default:
   tags: ['aws', 'sagemaker', 'model']
   max_active_runs: 1
 
-test_sagemaker_operator:    
+hello_world:    
   description: Test Sagemaker Operator
   render_template_as_native_obj: True
   schedule: 8 1 * * *
