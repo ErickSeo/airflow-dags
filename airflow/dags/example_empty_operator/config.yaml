@@ -36,8 +36,7 @@ empty_pipeline_teste2:
   description: This is a dummy pipeline for testing purposes.
   render_template_as_native_obj: True
   schedule: 
-    __type__: builtins.list
-    items:
+    or:
       - __type__: airflow.sdk.Asset
         uri: group1.task1
       - __type__: airflow.sdk.Asset
